@@ -1,0 +1,12 @@
+{  
+
+	"name": "CMB Telescope",
+	"version": "0.1",
+	"main": "index.html",
+	"window":{
+		"fullscreen": true,
+        "frame": true,
+        "toolbar": false
+    }
+
+}

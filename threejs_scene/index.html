@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+ 	<head>
+  	<title>CMB Telescope</title>
+	</head>
+
+ 	<body>
+ 		<script language="javascript" src="scripts/three.min.js"></script>
+ 		<!--<script language="javascript" src="scripts/julian2sidereal.js"></script>-->
+ 		<script language="javascript" src="scripts/altaz2radec_dev.js"></script>
+ 		<script>
+ 		//Lat long for nyc
+	var latitude = 40.7142700;
+	var longitude = -74.0059700;
+
+	var galac;
+
+  	var Gl;
+  	var Gb;
+
+  	//console.log("Gl "+Gl);
+  	//console.log("Gb "+Gb);
+
+
+ 			var container, stats;
+
+			var camera, scene, renderer, objects;
+			var pointLight;
+
+			init();
+			animate();
+
+			function init() {
+ 				container = document.createElement('div');
+				document.body.appendChild(container);
+				//telescop fov: 4.68
+				camera = new THREE.PerspectiveCamera( 4.68, window.innerWidth / window.innerHeight, 1, 5000 );
+				camera.position.set( 0, 0, 1000 );
+
+				scene = new THREE.Scene();
+
+				// Grid
+
+				var size = 500, step = 100;
+
+				var geometry = new THREE.SphereGeometry( 10, 48, 48 );
+
+				var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'textures/Planck_8192px_30GHz.png' ) } );
+
+				var sphere = new THREE.Mesh( geometry, material);
+
+					sphere.position.x =  0;
+					sphere.position.z = 0;
+
+					sphere.rotation.x = 0;
+					sphere.rotation.y = 90 * (Math.PI/180);
+					sphere.rotation.z = 0;
+
+					sphere.material.side = THREE.DoubleSide;
+
+					scene.add( sphere );
+
+
+				// Lights
+
+				scene.add( new THREE.AmbientLight( Math.random() * 0x202020 ) );
+
+				var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
+				directionalLight.position.x = Math.random() - 0.5;
+				directionalLight.position.y = Math.random() - 0.5;
+				directionalLight.position.z = Math.random() - 0.5;
+				directionalLight.position.normalize();
+				scene.add( directionalLight );
+
+				pointLight = new THREE.PointLight( 0xffffff, 1 );
+				scene.add( pointLight );
+
+				//var sprite = new THREE.Sprite( new THREE.SpriteCanvasMaterial( { color: 0xffffff, program: program } ) );
+				//sprite.scale.set( 8, 8, 8 );
+				//pointLight.add( sprite );
+
+				renderer = new THREE.WebGLRenderer();
+				//renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				var debugCanvas = document.createElement( 'canvas' );
+				debugCanvas.width = 512;
+				debugCanvas.height = 512;
+				debugCanvas.style.position = 'absolute';
+				debugCanvas.style.top = '0px';
+				debugCanvas.style.left = '0px';
+
+				container.appendChild( debugCanvas );
+
+				debugContext = debugCanvas.getContext( '2d' );
+				debugContext.setTransform( 1, 0, 0, 1, 256, 256 );
+				debugContext.strokeStyle = '#000000';
+
+				//stats = new Stats();
+				//stats.domElement.style.position = 'absolute';
+				//stats.domElement.style.top = '0px';
+				//container.appendChild(stats.domElement);
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function loadImage( path ) {
+
+				var image = document.createElement( 'img' );
+				var texture = new THREE.Texture( image, THREE.UVMapping )
+
+				image.onload = function () { texture.needsUpdate = true; };
+				image.src = path;
+
+				return texture;
+
+			}
+
+			//
+
+			function animate() {
+				
+			galac = altaz2galac(latitude, longitude, 70, 200);
+
+  			Gl = parseFloat(galac[0])* (Math.PI/180);
+  			Gb = parseFloat(galac[1])* (Math.PI/180);
+
+				requestAnimationFrame( animate );
+
+				render();
+				//stats.update();
+
+			}
+
+			function render() {
+				
+				var timer = Date.now() * 0.0001;
+
+				//camera.position.x = 0;
+				//camera.position.y = 0;
+				//camera.position.z = 0;
+
+				console.log(Gl);
+				console.log(Gb);
+
+				camera.rotation.x=Gl;
+				camera.rotation.y=Gb;
+
+				camera.lookAt( scene.position );
+
+
+
+				pointLight.position.x = 0;
+				pointLight.position.y = 0;
+				pointLight.position.z = 0;
+
+				renderer.render( scene, camera );
+
+			}
+
+
+ 		</script>
+ 	</body>
+</html>
