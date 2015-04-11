@@ -1,41 +1,35 @@
 <!DOCTYPE HTML>
 <html>
  	<head>
-  	<title>CMB Telescope</title>
+  	<title>Space Trash</title>
 	</head>
 
  	<body>
  		<script language="javascript" src="scripts/three.min.js"></script>
- 		<!--<script language="javascript" src="scripts/julian2sidereal.js"></script>-->
- 		<script language="javascript" src="scripts/altaz2radec_dev.js"></script>
+ 		
  		<script>
- 		//Lat long for nyc
-	var latitude = 40.7142700;
-	var longitude = -74.0059700;
-
-	var galac;
-
-  	var Gl;
-  	var Gb;
-
-  	//console.log("Gl "+Gl);
-  	//console.log("Gb "+Gb);
-
 
  			var container, stats;
 
 			var camera, scene, renderer, objects;
 			var pointLight;
 
+			var roty;	
+
+			var sphere;		
+
 			init();
 			animate();
 
 			function init() {
+
+				roty = 0;
+
  				container = document.createElement('div');
 				document.body.appendChild(container);
 				//telescop fov: 4.68
-				camera = new THREE.PerspectiveCamera( 4.68, window.innerWidth / window.innerHeight, 1, 5000 );
-				camera.position.set( 0, 0, 1000 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera.position.set( 0, 0, 400 );
 
 				scene = new THREE.Scene();
 
@@ -43,18 +37,19 @@
 
 				var size = 500, step = 100;
 
-				var geometry = new THREE.SphereGeometry( 10, 48, 48 );
+				var geometry = new THREE.SphereGeometry( 100, 48, 48 );
 
-				var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'textures/Planck_8192px_30GHz.png' ) } );
+				var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
 
-				var sphere = new THREE.Mesh( geometry, material);
+				sphere = new THREE.Mesh( geometry, material);
 
-					sphere.position.x =  0;
-					sphere.position.z = 0;
+					// sphere.position.x =  0;
+					// sphere.position.y =  0;
+					// sphere.position.z = 0;
 
-					sphere.rotation.x = 0;
-					sphere.rotation.y = 90 * (Math.PI/180);
-					sphere.rotation.z = 0;
+					// sphere.rotation.x = 0;
+					//sphere.rotation.y = 0;
+					// sphere.rotation.z = 0;
 
 					sphere.material.side = THREE.DoubleSide;
 
@@ -132,14 +127,12 @@
 			//
 
 			function animate() {
-				
-			galac = altaz2galac(latitude, longitude, 70, 200);
 
-  			Gl = parseFloat(galac[0])* (Math.PI/180);
-  			Gb = parseFloat(galac[1])* (Math.PI/180);
+				roty+=.01;
+				console.log(roty);
 
 				requestAnimationFrame( animate );
-
+				sphere.rotation.y=roty;
 				render();
 				//stats.update();
 
@@ -149,19 +142,9 @@
 				
 				var timer = Date.now() * 0.0001;
 
-				//camera.position.x = 0;
-				//camera.position.y = 0;
-				//camera.position.z = 0;
-
-				console.log(Gl);
-				console.log(Gb);
-
-				camera.rotation.x=Gl;
-				camera.rotation.y=Gb;
+				
 
 				camera.lookAt( scene.position );
-
-
 
 				pointLight.position.x = 0;
 				pointLight.position.y = 0;
