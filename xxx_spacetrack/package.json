@@ -1,0 +1,60 @@
+{
+  "name": "spacetrack",
+  "version": "2.1.0",
+  "description": "node library for the Space-Track.org REST API.",
+  "keywords": [
+    "spacetrack",
+    "JFCC",
+    "JSpOC",
+    "satellite",
+    "orbit"
+  ],
+  "author": {
+    "name": "Ben Elsen",
+    "email": "mail@benelsen.com",
+    "url": "https://benelsen.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benelsen/spacetrack.git"
+  },
+  "dependencies": {
+    "es6-promise": "^2.0.1",
+    "request": "^2.51.0"
+  },
+  "devDependencies": {
+    "tape": "^3.2.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/**/*"
+  },
+  "license": "MIT",
+  "gitHead": "5fca48afbebb1c3a9b637df09bf58fefcdbb71fe",
+  "bugs": {
+    "url": "https://github.com/benelsen/spacetrack/issues"
+  },
+  "homepage": "https://github.com/benelsen/spacetrack",
+  "_id": "spacetrack@2.1.0",
+  "_shasum": "e5c0f7ab262b8a76ebc8a604f69c05a9852b7e63",
+  "_from": "spacetrack@",
+  "_npmVersion": "2.1.18",
+  "_nodeVersion": "1.0.2",
+  "_npmUser": {
+    "name": "benelsen",
+    "email": "mail@benelsen.com"
+  },
+  "maintainers": [
+    {
+      "name": "benelsen",
+      "email": "ben.elsen@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "e5c0f7ab262b8a76ebc8a604f69c05a9852b7e63",
+    "tarball": "http://registry.npmjs.org/spacetrack/-/spacetrack-2.1.0.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/spacetrack/-/spacetrack-2.1.0.tgz",
+  "readme": "ERROR: No README data found!"
+}
