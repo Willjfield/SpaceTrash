@@ -74,7 +74,6 @@ function loadImage( path ) {
 
 function animate() {
         roty+=.01;
-        console.log(roty);
         requestAnimationFrame( animate );
         sphere.rotation.y=roty;
         render();
