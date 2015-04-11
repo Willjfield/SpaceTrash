@@ -113,8 +113,9 @@ function loadImage( path ) {
 }
 
 function animate() {
+
         roty+=.001;
-        //console.log(roty);
+
         requestAnimationFrame( animate );
         sphere.rotation.y=roty;
         sphereClouds.rotation.y=roty*.5;
