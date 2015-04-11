@@ -1,34 +1,74 @@
 var container, stats;
-var camera, scene, renderer, objects;
+var camera, scene, controls, renderer, objects;
 var pointLight;
 var roty;	
-var sphere;		
+var sphere;
+var materialP,geoP,particles, particleCount;		
 
 init();
 animate();
 
 function init() {
         roty = 0;
+        particleCount = 500;
 
         container = document.createElement('div');
         document.body.appendChild(container);
 
-        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 2000 );
         camera.position.set( 0, 0, 400 );
+
+        controls = new THREE.OrbitControls( camera );
+                                controls.damping = 0.2;
+                                controls.addEventListener( 'change', render );
 
         scene = new THREE.Scene();
 
+        //Sats
+        geoP= new THREE.Geometry();
+        for ( i = 0; i < particleCount; i ++ ) {
+
+                                        var vertex = new THREE.Vector3();
+                                        vertex.x = 500 * Math.random() - 250;
+                                        vertex.y = 500 * Math.random() - 250;
+                                        vertex.z = 500 * Math.random() - 250;
+
+                                        geoP.vertices.push( vertex );
+
+                                }
+
+        materialP = new THREE.PointCloudMaterial( { size: 5, sizeAttenuation: false, alphaTest: 0.5, transparent: true } );
+                materialP.color.setHSL( 1.0, 0.0, 1 );
+
+                particlesP = new THREE.PointCloud( geoP, materialP );
+                scene.add( particlesP );
+
         // Grid
         var size = 500, step = 100;
+
         var geometry = new THREE.SphereGeometry( 100, 48, 48 );
-        var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
+        var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
+
+        var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
+        var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
+
+        material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
+        material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
+
+        materialClouds.transparent = true;
+        materialClouds.alphaMap = THREE.ImageUtils.loadTexture('textures/earthcloudmaptransI.jpg');
+
         sphere = new THREE.Mesh( geometry, material);
         sphere.material.side = THREE.DoubleSide;
         scene.add( sphere );
 
+        sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
+        sphereClouds.material.side = THREE.DoubleSide;
+        sphere.add( sphereClouds );
+
         // Lights
-        scene.add( new THREE.AmbientLight( Math.random() * 0x202020 ) );
-        var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
+        scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );
+        var directionalLight = new THREE.DirectionalLight( 1 * 0xffffff );
         directionalLight.position.x = Math.random() - 0.5;
         directionalLight.position.y = Math.random() - 0.5;
         directionalLight.position.z = Math.random() - 0.5;
@@ -38,7 +78,7 @@ function init() {
         pointLight = new THREE.PointLight( 0xffffff, 1 );
         scene.add( pointLight );
 
-        renderer = new THREE.WebGLRenderer();
+        renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
         container.appendChild( renderer.domElement );
 
@@ -73,11 +113,13 @@ function loadImage( path ) {
 }
 
 function animate() {
-        roty+=.01;
-        console.log(roty);
+        roty+=.001;
+        //console.log(roty);
         requestAnimationFrame( animate );
         sphere.rotation.y=roty;
+        sphereClouds.rotation.y=roty*.5;
         render();
+        controls.update();
 }
 
 function render() { 
