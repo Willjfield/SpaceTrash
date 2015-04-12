@@ -144,7 +144,7 @@ function createSats(){
                 for (var i=0; i<geoP.vertices.length; i++) {
                     for (var j=0; j<geoP.vertices.length; j++) {
                         if (i!=j) {
-                            if (geoP.vertices[i].distanceTo(geoP.vertices[j]) < .01) {
+                            if (geoP.vertices[i].distanceTo(geoP.vertices[j]) > 5 && geoP.vertices[i].distanceTo(geoP.vertices[j])<10) {
                                 //console.log("vertex " + i + " collided with vertex " + j);
                                 var vertex = new THREE.Vector3();
 
