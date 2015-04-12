@@ -149,20 +149,21 @@ function createSats(){
 
                                                 var vertex = new THREE.Vector3();
 
-                                                vertex.x = tle_data[i].satellite_x/50;
-                                                vertex.y = tle_data[i].satellite_z/50;
-                                                vertex.z = tle_data[i].satellite_y/50;
+                                                vertex.x = tle_data[i].satellite_x*.0156;
+                                                vertex.y = tle_data[i].satellite_z*.0156;
+                                                vertex.z = tle_data[i].satellite_y*.0156;
 
                                                 geoP.vertices.push( vertex );
 
-                                        }                                      
+                }                                    
 
-                materialP = new THREE.PointCloudMaterial( { size: 5, sizeAttenuation: false, alphaTest: 0.5, transparent: true } );
+                        materialP = new THREE.PointCloudMaterial( { size: 2, sizeAttenuation: false, transparent: false } );
                         materialP.color.setHSL( 1.0, 0.0, 1 );
 
                         particlesP = new THREE.PointCloud( geoP, materialP );
                         scene.add( particlesP );
-                        //geoP.vertices=[];
+                        
+                        
 
 
 }
