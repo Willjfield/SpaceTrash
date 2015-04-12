@@ -8,94 +8,82 @@ var materialP,geoP,particles, particleCount;
 init();
 animate();
 
+
 function init() {
-        roty = 0;
-        particleCount = 500;
 
-        container = document.createElement('div');
-        document.body.appendChild(container);
+        init_tle(function() {
 
-        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 2000 );
-        camera.position.set( 0, 0, 400 );
+                roty = 0;
 
-        controls = new THREE.OrbitControls( camera );
-                                controls.damping = 0.2;
-                                controls.addEventListener( 'change', render );
+                container = document.createElement('div');
+                document.body.appendChild(container);
 
-        scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 5000 );
+                camera.position.set( 0, 0, 400 );
 
-        //Sats
-        geoP= new THREE.Geometry();
-        for ( i = 0; i < particleCount; i ++ ) {
+                controls = new THREE.OrbitControls( camera );
+                                        controls.damping = 0.2;
+                                        controls.addEventListener( 'change', render );
 
-                                        var vertex = new THREE.Vector3();
-                                        vertex.x = 500 * Math.random() - 250;
-                                        vertex.y = 500 * Math.random() - 250;
-                                        vertex.z = 500 * Math.random() - 250;
+                scene = new THREE.Scene();
 
-                                        geoP.vertices.push( vertex );
+               createSats();
 
-                                }
+                // Grid
+                var size = 500, step = 100;
 
-        materialP = new THREE.PointCloudMaterial( { size: 5, sizeAttenuation: false, alphaTest: 0.5, transparent: true } );
-                materialP.color.setHSL( 1.0, 0.0, 1 );
+                var geometry = new THREE.SphereGeometry( 100, 48, 48 );
+                var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
 
-                particlesP = new THREE.PointCloud( geoP, materialP );
-                scene.add( particlesP );
+                var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
+                var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
 
-        // Grid
-        var size = 500, step = 100;
+                material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
+                material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
 
-        var geometry = new THREE.SphereGeometry( 100, 48, 48 );
-        var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
+                materialClouds.transparent = true;
+                materialClouds.alphaMap = THREE.ImageUtils.loadTexture('textures/earthcloudmaptransI.jpg');
 
-        var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
-        var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
+                sphere = new THREE.Mesh( geometry, material);
+                sphere.material.side = THREE.DoubleSide;
+                scene.add( sphere );
 
-        material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
-        material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
+                sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
+                sphereClouds.material.side = THREE.DoubleSide;
+                sphere.add( sphereClouds );
 
-        materialClouds.transparent = true;
-        materialClouds.alphaMap = THREE.ImageUtils.loadTexture('textures/earthcloudmaptransI.jpg');
+                // Lights
+                scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );
+                var directionalLight = new THREE.DirectionalLight( 1 * 0xffffff );
+                directionalLight.position.x = Math.random() - 0.5;
+                directionalLight.position.y = Math.random() - 0.5;
+                directionalLight.position.z = Math.random() - 0.5;
+                directionalLight.position.normalize();
+                scene.add( directionalLight );
 
-        sphere = new THREE.Mesh( geometry, material);
-        sphere.material.side = THREE.DoubleSide;
-        scene.add( sphere );
+                pointLight = new THREE.PointLight( 0xffffff, 1 );
+                scene.add( pointLight );
 
-        sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
-        sphereClouds.material.side = THREE.DoubleSide;
-        sphere.add( sphereClouds );
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                container.appendChild( renderer.domElement );
 
-        // Lights
-        scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );
-        var directionalLight = new THREE.DirectionalLight( 1 * 0xffffff );
-        directionalLight.position.x = Math.random() - 0.5;
-        directionalLight.position.y = Math.random() - 0.5;
-        directionalLight.position.z = Math.random() - 0.5;
-        directionalLight.position.normalize();
-        scene.add( directionalLight );
+                var debugCanvas = document.createElement( 'canvas' );
+                debugCanvas.width = 512;
+                debugCanvas.height = 512;
+                debugCanvas.style.position = 'absolute';
+                debugCanvas.style.top = '0px';
+                debugCanvas.style.left = '0px';
 
-        pointLight = new THREE.PointLight( 0xffffff, 1 );
-        scene.add( pointLight );
+                container.appendChild( debugCanvas );
 
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        container.appendChild( renderer.domElement );
+                debugContext = debugCanvas.getContext( '2d' );
+                debugContext.setTransform( 1, 0, 0, 1, 256, 256 );
+                debugContext.strokeStyle = '#000000';
 
-        var debugCanvas = document.createElement( 'canvas' );
-        debugCanvas.width = 512;
-        debugCanvas.height = 512;
-        debugCanvas.style.position = 'absolute';
-        debugCanvas.style.top = '0px';
-        debugCanvas.style.left = '0px';
+                window.addEventListener( 'resize', onWindowResize, false );
 
-        container.appendChild( debugCanvas );
-
-        debugContext = debugCanvas.getContext( '2d' );
-        debugContext.setTransform( 1, 0, 0, 1, 256, 256 );
-        debugContext.strokeStyle = '#000000';
-
-        window.addEventListener( 'resize', onWindowResize, false );
+        });
 }
 
 function onWindowResize() {
@@ -113,6 +101,7 @@ function loadImage( path ) {
 }
 
 function animate() {
+        tle_update();
 
         roty+=.001;
 
@@ -124,10 +113,36 @@ function animate() {
 }
 
 function render() { 
+        createSats();
         var timer = Date.now() * 0.0001;
         camera.lookAt( scene.position );
         pointLight.position.x = 0;
         pointLight.position.y = 0;
         pointLight.position.z = 0;
         renderer.render( scene, camera );
+}
+
+function createSats(){ 
+                //Sats
+
+                geoP= new THREE.Geometry();
+
+                for ( i = 0; i < tle_data.length; i ++ ) {
+
+                                                var vertex = new THREE.Vector3();
+                                                
+                                                vertex.x = tle_data[i].satellite_x/50;
+                                                vertex.y = tle_data[i].satellite_z/50;
+                                                vertex.z = tle_data[i].satellite_y/50;
+
+                                                geoP.vertices.push( vertex );
+
+                                        }
+                console.log(geoP.vertices.length);                                        
+
+                materialP = new THREE.PointCloudMaterial( { size: 5, sizeAttenuation: false, alphaTest: 0.5, transparent: true } );
+                        materialP.color.setHSL( 1.0, 0.0, 1 );
+
+                        particlesP = new THREE.PointCloud( geoP, materialP );
+                        scene.add( particlesP );
 }

@@ -29,18 +29,21 @@ function tle(line1, line2) {
 }
 // Holds all tle objects
 var tle_data = [];
-// Load TLE Data
-$.getJSON("TLE_DATA.json", function(json) {
-    for (var key in json) {
-        if (json.hasOwnProperty(key)) {
-            var obj = json[key];
-            var tmp = new tle(obj.TLE_LINE1, obj.TLE_LINE2);
-            tmp.update();
-            tle_data.push(tmp);
-       }
-    }
-});
 
+function init_tle(cb) {
+    // Load TLE Data
+    $.getJSON("TLE_DATA.json", function(json) {
+        for (var key in json) {
+            if (json.hasOwnProperty(key)) {
+                var obj = json[key];
+                var tmp = new tle(obj.TLE_LINE1, obj.TLE_LINE2);
+                tmp.update();
+                tle_data.push(tmp);
+           }
+        }
+        cb();
+    });
+}
 // Call to update data to current time
 function tle_update() {
     for (var key in tle_data) {
