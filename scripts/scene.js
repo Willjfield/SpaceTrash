@@ -52,9 +52,9 @@ function init() {
         // Lights
         scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );
         var directionalLight = new THREE.DirectionalLight( 1 * 0xffffff );
-        directionalLight.position.x = Math.random() - 0.5;
-        directionalLight.position.y = Math.random() - 0.5;
-        directionalLight.position.z = Math.random() - 0.5;
+        directionalLight.position.x = 0.5;
+        directionalLight.position.y = 0.5;
+        directionalLight.position.z = 0.5;
         directionalLight.position.normalize();
         scene.add( directionalLight );
 
