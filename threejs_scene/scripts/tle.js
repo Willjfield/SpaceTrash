@@ -7,7 +7,6 @@ function tle(line1, line2) {
         var satrec = satellite.twoline2satrec (this.line1, this.line2);
         // Propagate satellite using current time
         var now = new Date();
-
         // NOTE: while Javascript Date returns months in range 0-11, all satellite.js methods require months in range 1-12.
         var position_and_velocity = satellite.propagate (satrec,
                                                         now.getUTCFullYear(), 
