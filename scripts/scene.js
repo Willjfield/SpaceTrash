@@ -32,7 +32,7 @@ function init() {
         var geometry = new THREE.SphereGeometry( 100, 48, 48 );
         var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
 
-        var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
+        var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap4k.jpg' ) } );
         var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
 
         material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
