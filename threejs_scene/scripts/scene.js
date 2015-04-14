@@ -3,6 +3,7 @@ var camera, scene, controls, renderer, objects;
 var pointLight;
 var roty;	
 var sphere;
+var skybox;
 var materialP,particles, particleCount;
 		
 
@@ -10,8 +11,7 @@ init();
 animate();
 
 
-function init() {
-        
+function init() {        
         
         init_tle(function() {
 
@@ -20,7 +20,7 @@ function init() {
                 container = document.createElement('div');
                 document.body.appendChild(container);
 
-                camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 5000 );
+                camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 4000 );
                 camera.position.set( 0, 0, 400 );
 
                 controls = new THREE.OrbitControls( camera );
@@ -36,18 +36,20 @@ function init() {
 
                 var geometry = new THREE.SphereGeometry( 100, 48, 48 );
                 var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
-
-
+                var geometryBG = new THREE.SphereGeometry( 120, 48, 48 );
 
 
                 var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
                 var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
+                var materialBG = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/Panorama.jpg' )} );
 
                 material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
                 material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
 
                 materialClouds.transparent = true;
                 materialClouds.alphaMap = THREE.ImageUtils.loadTexture('textures/earthcloudmaptransI.jpg');
+
+                materialBG.transparent = false;
 
                 sphere = new THREE.Mesh( geometry, material);
                 sphere.material.side = THREE.DoubleSide;
@@ -56,6 +58,10 @@ function init() {
                 sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
                 sphereClouds.material.side = THREE.DoubleSide;
                 sphere.add( sphereClouds );
+
+                skybox = new THREE.Mesh( geometryBG, materialBG);
+                skybox.material.side = THREE.DoubleSide;
+                scene.add( skybox );
 
                 // Lights
                 scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );

@@ -2,7 +2,7 @@ var container, stats;
 var camera, scene, controls, renderer, objects;
 var pointLight;
 var roty;	
-var sphere;
+var sphere, skybox;
 var materialP,particles, particleCount;
 
 init();
@@ -31,9 +31,11 @@ function init() {
 
         var geometry = new THREE.SphereGeometry( 100, 48, 48 );
         var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
+        var geometryBG = new THREE.SphereGeometry( 4000, 48, 48 );
 
         var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap4k.jpg' ) } );
         var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
+        var materialBG = new THREE.MeshLambertMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/Panorama.jpg' ), color: 0x333333, emmisive: 0x666666} );
 
         material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
         material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
@@ -48,6 +50,10 @@ function init() {
         sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
         sphereClouds.material.side = THREE.DoubleSide;
         sphere.add( sphereClouds );
+
+        skybox = new THREE.Mesh( geometryBG, materialBG);
+        skybox.material.side = THREE.DoubleSide;
+        scene.add( skybox );
 
         // Lights
         scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );
