@@ -15,7 +15,7 @@ function init() {
         container = document.createElement('div');
         document.body.appendChild(container);
 
-        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 5000 );
+        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight,.01, 2000 );
         camera.position.set( 0, 0, 400 );
 
         controls = new THREE.OrbitControls( camera );
@@ -30,8 +30,8 @@ function init() {
         var size = 500, step = 100;
 
         var geometry = new THREE.SphereGeometry( 100, 48, 48 );
-        var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
-        var geometryBG = new THREE.SphereGeometry( 4000, 48, 48 );
+        var geometryClouds = new THREE.SphereGeometry( 103, 48, 48 );
+        var geometryBG = new THREE.SphereGeometry( 1000, 48, 48 );
 
         var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap4k.jpg' ) } );
         var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
@@ -168,10 +168,13 @@ function createSats(){
                         materialP = new THREE.PointCloudMaterial( { size: 2, sizeAttenuation: false, transparent: false } );
                         materialP.color.setHSL( 1.0, 0.0, 1 );
 
-                        materialC = new THREE.PointCloudMaterial( { size: 15, sizeAttenuation: false, transparent: false } );
-                        materialC.color.setHSL( 0.0, 1.0, .5 );
+                        materialC = new THREE.PointCloudMaterial( { color: 0xFFFFFF,size: 10, sizeAttenuation: true, map: THREE.ImageUtils.loadTexture('textures/collision.png'), transparent: true, alphaTest: 0.01 } );
+                        //materialC = new THREE.SpriteMaterial( { color: 0xFFFFFF, map: 'textures/collision.png' } );
+
+                        //materialC.color.setHSL( 0.0, 1.0, .5 );
 
                         var particlesP = new THREE.PointCloud( geoP, materialP );
+                        particlesP.sortParticles = true;
                         scene.add( particlesP );
 
                         var particlesC = new THREE.PointCloud( geoC, materialC );
