@@ -24,6 +24,10 @@ function tle(line1, line2) {
         this.satellite_x = position_eci["x"];
         this.satellite_y = position_eci["y"];
         this.satellite_z = position_eci["z"];
+
+        this.velocity_x = velocity_eci["x"];
+        this.velocity_y = velocity_eci["y"];
+        this.velocity_z = velocity_eci["z"];
     };
 }
 // Holds all tle objects
