@@ -186,18 +186,22 @@ input[type=range]:focus::-moz-range-track {
 }
 /* Intro Window */
 #transbox {
-  position: absolute;
   text-align: center;
   font-family:Verdana, Geneva, sans-serif;
   padding: 15px 15px;
   box-shadow:0px 0px 10px black;
     width: 350px;
     height: 350px;
-    margin:200px 550px;
     background-color: #ffffff;
     border: none;
     opacity: 0.8;
     filter: alpha(opacity=80); /* For IE8 and earlier */
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 #buttonText {

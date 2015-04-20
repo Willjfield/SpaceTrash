@@ -130,10 +130,7 @@ function render() {
 }
 
 function createSats(){ 
-                //Sats
-                //var vertex=[];
-                
-                
+
                 var geoP= new THREE.Geometry({ verticesNeedUpdate: true});
                 var geoC= new THREE.Geometry({ verticesNeedUpdate: true});
 
@@ -164,7 +161,6 @@ function createSats(){
                     for (var j=0; j<geoP.vertices.length; j++) {
                         if (i!=j) {
                             if (geoP.vertices[i].distanceTo(geoP.vertices[j]) < 3 && satVelocity[i].distanceTo(satVelocity[j])>.25) {
-                                //console.log("vertex " + i + " collided with vertex " + j);
                                 var vertex = new THREE.Vector3();
 
                                 vertex.x = geoP.vertices[i].x;
@@ -180,11 +176,9 @@ function createSats(){
 
                         materialP = new THREE.PointCloudMaterial( { size: 1, sizeAttenuation: false, transparent: false } );
                         materialP.color.setHSL( 1.0, 0.0, 1 );
+                        console.log(geoP.vertices.length);
 
                         materialC = new THREE.PointCloudMaterial( { color: 0xFFFFFF,size: 10, sizeAttenuation: true, map: THREE.ImageUtils.loadTexture('textures/collision.png'), transparent: true, alphaTest: 0.01 } );
-                        //materialC = new THREE.SpriteMaterial( { color: 0xFFFFFF, map: 'textures/collision.png' } );
-
-                        //materialC.color.setHSL( 0.0, 1.0, .5 );
 
                         var particlesP = new THREE.PointCloud( geoP, materialP );
                         particlesP.sortParticles = true;
@@ -193,9 +187,4 @@ function createSats(){
                         var particlesC = new THREE.PointCloud( geoC, materialC );
                         scene.add( particlesC );
                                                            
-    //materialP = new THREE.PointCloudMaterial( { size: 2, sizeAttenuation: false, transparent: false } );
-    //materialP.color.setHSL( 1.0, 0.0, 1 );
-
-    //particlesP = new THREE.PointCloud( geoP, materialP );
-    //scene.add( particlesP );
 }
