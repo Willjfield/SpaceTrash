@@ -12,7 +12,7 @@ function init() {
     init_tle(function() {
         roty = 0;
 
-        console.log(tle_data[1]);
+        //console.log(tle_data[1]);
 
         container = document.createElement('div');
         document.body.appendChild(container);
@@ -176,7 +176,7 @@ function createSats(){
 
                         materialP = new THREE.PointCloudMaterial( { size: 1, sizeAttenuation: false, transparent: false } );
                         materialP.color.setHSL( 1.0, 0.0, 1 );
-                        console.log(geoP.vertices.length);
+                        //console.log(geoP.vertices.length);
 
                         materialC = new THREE.PointCloudMaterial( { color: 0xFFFFFF,size: 10, sizeAttenuation: true, map: THREE.ImageUtils.loadTexture('textures/collision.png'), transparent: true, alphaTest: 0.01 } );
 

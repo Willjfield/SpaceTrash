@@ -18,7 +18,7 @@ a { text-decoration: none; }
   position: fixed; z-index: 1;
   bottom: 1.375em; left: 1.375em;
   overflow: hidden;
-  width: 250px; height: 200px;
+  width: 15.625em; height: 12.500em;
   padding: 1.375em;
   text-align: left;
   background: #1E4B85;
@@ -47,7 +47,7 @@ a { text-decoration: none; }
   position: absolute;
   bottom: 0; left: 0;
   width: 1.375em; height: 1.375em;
-  font-size: 200%; line-height: 1.375em;
+  font-size: 200%; line-height: 1.25em;
   font-weight: 300; text-align: center;
   transform: rotate(45deg);
   transform-origin: 50%;
@@ -184,57 +184,54 @@ input[type=range]:focus::-ms-track {
 input[type=range]:focus::-moz-range-track {
   background: #ccc;
 }
-/* Intro Window */
-#transbox {
-  text-align: center;
+
+/**\
+|  | Intro Modal
+\**/
+.modal {
+  text-align: right;
   font-family:Verdana, Geneva, sans-serif;
-  padding: 15px 15px;
+  /*padding: 15px 15px;*/
   box-shadow:0px 0px 10px black;
-    width: 350px;
-    height: 350px;
-    background-color: #ffffff;
-    border: none;
-    opacity: 0.8;
-    filter: alpha(opacity=80); /* For IE8 and earlier */
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)
+  width: 350px;
+  /*height: 350px;*/
+  background-color: #ffffff;
+  border: none;
+  opacity: 0.8;
+  filter: alpha(opacity=80); /* For IE8 and earlier */
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
 }
 
-#buttonText {
+.modal p {
   text-align: center;
-  font-family:Verdana, Geneva, sans-serif;
-  position: relative;
-    width: 0px;
-    height: 0px;
-    margin: 5px 5px;
+  padding: 0 15px 15px;
 }
 
-#close {
-  text-align: center;
+.btn-close {
+  /*text-align: center;*/
   position: relative;  
-  background-color:#f7f7f7;
+  /*background-color:#f7f7f7;*/
   -moz-border-radius:0px;
   -webkit-border-radius:0px;
-  border-radius:0 px;
-  border:1px solid #000000;
+  /*border-radius:0 px;*/
+  /*border:1px solid #000000;*/
   cursor:pointer;
-  color:#000000;
+  /*color:#000000;*/
   font-family:arial;
   font-size:17px;
-  width:100px;
-  padding:5px 5px;
+  /*width:100px;*/
+  padding: 10px 10px;
   text-decoration:none;
-  left:  50%;
-  bottom: -10px;
 }
-#close:hover {
-  background-color:#ffffff;
+.btn-close:hover {
+  /*background-color:#ffffff;*/
 }
-#close:active {
+.btn-close:active {
   position:relative;
   top:1px;
 }

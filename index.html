@@ -8,46 +8,36 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
     <body>
-      <div id = "parent">
-      <div id="transbox">
+      <div class="modal">
+        <span class="btn-close">x</span>
         <p>Space travel has produced enormous amounts of space trash. The trash consists of defunct satellites,
           spent fuselages, and random debris that breaks away from ships. This site tracks some of that trash in real time. 
           <br>
           <br>
           Red dots represent areas where two pieces of debris will fly past each other at a close range, risking collision. In the lower left, you can fast forward to see where potential collisions may happen in the future.
         </p>
-        <br>
-        <button id="close">Close</button>
       </div>
-    </div>
-        <nav class="float-nav closed">
-          <ul>
-            <li>
-              <a href="#">Time</a>
-              <a href="#" class="current-time pull-right">1</a>
-            </li>
-            <li>
-              <a href="#">Speed</a>
-              <a href="#" class="speed-factor pull-right">1</a>
-            </li>
-            <li>
-              <input type="range" min="1" max="1000" step="1" value="0"/>
-            </li>
-          </ul>
-          <a class="toggle" href="#">+</a>
-        </nav>
+      <nav class="float-nav closed">
+        <ul>
+          <li>
+            <a href="#">Time</a>
+            <a href="#" class="current-time pull-right">1</a>
+          </li>
+          <li>
+            <a href="#">Speed</a>
+            <a href="#" class="speed-factor pull-right">1</a>
+          </li>
+          <li>
+            <input type="range" min="1" max="1000" step="1" value="0"/>
+          </li>
+        </ul>
+        <a class="toggle" href="#">+</a>
+      </nav>
     </body>
     <script>
-    var parent = document.getElementById("parent");
-    var child = document.getElementById("transbox");
-
-    var close = document.getElementById("close");
-      close.addEventListener("click",buttonAction);
-
-      function buttonAction(){
-        console.log("clicked");
-        parent.removeChild(child);
-      }
+      $('.btn-close').on('click', function() {
+        $('.modal').hide();
+      });
     </script>
     <script language="javascript" src="lib/clock-speedup.js"></script>
     <script language="javascript" src="scripts/tle.js"></script>
