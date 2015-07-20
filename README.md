@@ -6,3 +6,4 @@ Uses satellite.js and three.js
 Made by Team Kessler:
 
 [Will Field](http://www.willjfield.com/)
+[Adil Soubki](http://www.adilsoubki.com/)
