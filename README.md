@@ -8,3 +8,11 @@ Made by Team Kessler:
 [Will Field](http://www.willjfield.com/)
 
 [Adil Soubki](http://www.adilsoubki.com/)
+
+Oskar Maria Grande
+
+Katie Orenstein
+
+Olivia Ross
+
+Nikola Soldeus
