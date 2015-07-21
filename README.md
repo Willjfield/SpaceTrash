@@ -9,7 +9,7 @@ Made by Team Kessler:
 
 [Adil Soubki](http://www.adilsoubki.com/)
 
-Oskar Maria Grande
+[Oskar Maria Grande](http://virtue68k.com)
 
 Katie Orenstein
 
