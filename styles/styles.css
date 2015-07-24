@@ -235,3 +235,21 @@ input[type=range]:focus::-moz-range-track {
   position:relative;
   top:1px;
 }
+/**\
+|  | Credits
+\**/
+.credits{
+  position:absolute;
+  line-height: 100%;
+  bottom:0px;
+  right:0px;
+  padding:5px;
+  color:white;
+  font-size: 10px;
+  font-weight: lighter;
+  font-family: helvetica;
+}
+
+a{
+  color:white;
+}
