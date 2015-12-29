@@ -12,7 +12,6 @@ animate();
 
 
 function init() {        
-        
         init_tle(function() {
 
                 roty = 0;
@@ -29,35 +28,15 @@ function init() {
 
                 scene = new THREE.Scene();
 
-               //createSats();
-
                 // Grid
                 var size = 500, step = 100;
 
-                var geometry = new THREE.SphereGeometry( 100, 48, 48 );
-                var geometryClouds = new THREE.SphereGeometry( 101, 48, 48 );
+                
                 var geometryBG = new THREE.SphereGeometry( 120, 48, 48 );
 
-
-                var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap1k.jpg' ) } );
-                var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
                 var materialBG = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/Panorama.jpg' )} );
 
-                material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
-                material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
-
-                materialClouds.transparent = true;
-                materialClouds.alphaMap = THREE.ImageUtils.loadTexture('textures/earthcloudmaptransI.jpg');
-
                 materialBG.transparent = false;
-
-                sphere = new THREE.Mesh( geometry, material);
-                sphere.material.side = THREE.DoubleSide;
-                scene.add( sphere );
-
-                sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
-                sphereClouds.material.side = THREE.DoubleSide;
-                sphere.add( sphereClouds );
 
                 skybox = new THREE.Mesh( geometryBG, materialBG);
                 skybox.material.side = THREE.DoubleSide;
@@ -119,10 +98,6 @@ function animate() {
 
         roty+=.001;
 
-        
-        sphere.rotation.y=roty;
-        sphereClouds.rotation.y=roty*.5;
-        createSats();
         render();
         controls.update();
 

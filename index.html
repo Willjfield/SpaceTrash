@@ -4,6 +4,7 @@
         <title>Space Trash</title>
         <link rel="stylesheet" type="text/css" href="styles/styles.css">
         <script language="javascript" src="scripts/three.min.js"></script>
+       
         <script language="javascript" src="lib/satellite.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
@@ -43,5 +44,64 @@
     <script language="javascript" src="lib/clock-speedup.js"></script>
     <script language="javascript" src="scripts/tle.js"></script>
     <script language="javascript" src="scripts/OrbitControls.js"></script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+
+      uniform sampler2D dayTexture;
+      uniform sampler2D nightTexture;
+      uniform sampler2D normalTexture;
+
+      uniform vec3 sunDirection;
+
+      varying vec2 vUv;
+      varying vec3 vNormal;
+
+      void main( void ) {
+		//vec2 vUv = vUv+texOffset;
+		vec3 bumpDir = vec3(0.0,-0.2,1.0);
+                vec3 dayColor = texture2D( dayTexture, vUv ).rgb;
+                vec3 nightColor = texture2D( nightTexture, vUv ).rgb;
+                 //RGB of our normal map
+		vec3 NormalMap = texture2D(normalTexture, vUv).rgb;
+		 //normalize our vectors
+		vec3 N = normalize(NormalMap * 2.0 - 1.0);
+		vec3 L = normalize(bumpDir * 2.0 - 1.0);
+		float Diffuse = (dot(N, L)-0.5)*.25;
+		//float Diffuse = clamp(dot(N,L),-.1,.1);
+		// compute cosine sun to normal so -1 is away from sun and +1 is toward sun.
+                float cosineAngleSunToNormal = dot(normalize(vNormal), sunDirection);
+
+                // sharpen the edge beween the transition
+                cosineAngleSunToNormal = clamp( cosineAngleSunToNormal * 10.0, -1.0, 1.0);
+
+                // convert to 0 to 1 for mixing
+                float mixAmount = cosineAngleSunToNormal*0.5 + 0.5;
+
+                // Select day or night texture based on mix.
+                vec3 color = mix( nightColor, dayColor, mixAmount )+Diffuse;
+//the calculation which brings it all together
+    		//vec3 Intensity = Diffuse;
+    		//vec3 FinalColor = NormalMap;
+    		//gl_FragColor = color * NormalMap;
+               gl_FragColor = vec4( color, 1.0 );
+        //gl_FragColor = vec4( mixAmount, mixAmount, mixAmount, 1.0 );
+      }
+    </script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+
+      varying vec2 vUv;
+      varying vec3 vNormal;
+
+      void main()
+      {
+	vUv = uv;
+        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        //vNormal = normalMatrix * normal;
+        vNormal = normal;
+        gl_Position = projectionMatrix * mvPosition;
+        //gl_Position = mvPosition;
+      }
+
+    </script>
     <script language="javascript" src="scripts/scene.js"></script>
 </html>

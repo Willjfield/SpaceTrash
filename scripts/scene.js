@@ -2,11 +2,20 @@ var container, stats;
 var camera, scene, controls, renderer, objects;
 var pointLight;
 var roty;	
-var sphere, skybox;
+var sphere,earth, skybox;
+var earthMaterial;
 var materialP,particles, particleCount;
+
+var lightDir= new THREE.Vector3(0.0,-.2,1.0);
+var earthAxis = new THREE.Vector3(0,1,0);
+
 
 init();
 animate();
+
+function map (val, in_min, in_max, out_min, out_max) {
+  return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 function init() {
     init_tle(function() {
@@ -26,37 +35,41 @@ function init() {
 
         scene = new THREE.Scene();
 
-        createSats();
+       	createSats();
 
         // Grid
         var size = 500, step = 100;
 
-        var geometry = new THREE.SphereGeometry( 100, 48, 48 );
-        var geometryClouds = new THREE.SphereGeometry( 103, 48, 48 );
+       //Background
         var geometryBG = new THREE.SphereGeometry( 2000, 48, 48 );
-
-        var material = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthmap4k.jpg' ) } );
-        var materialClouds = new THREE.MeshPhongMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/earthcloudmap.jpg' )} );
-        var materialBG = new THREE.MeshLambertMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/Panorama.jpg' ), color: 0x333333, emmisive: 0x666666} );
-
-        material.specularMap = THREE.ImageUtils.loadTexture('textures/earthspec1k.jpg');
-        material.bumpMap = THREE.ImageUtils.loadTexture('textures/earthbump1k.jpg');
-
-        materialClouds.transparent = true;
-        materialClouds.alphaMap = THREE.ImageUtils.loadTexture('textures/earthcloudmaptransI.jpg');
-
-        sphere = new THREE.Mesh( geometry, material);
-        sphere.material.side = THREE.DoubleSide;
-        scene.add( sphere );
-
-        sphereClouds = new THREE.Mesh( geometryClouds, materialClouds);
-        sphereClouds.material.side = THREE.DoubleSide;
-        sphere.add( sphereClouds );
+        var materialBG = new THREE.MeshLambertMaterial( {  map: THREE.ImageUtils.loadTexture( 'textures/Panorama.jpg' ), color: 0xffffff, emmisive: 0xffffff} );
 
         skybox = new THREE.Mesh( geometryBG, materialBG);
         skybox.material.side = THREE.DoubleSide;
         scene.add( skybox );
 
+	
+        //Earth
+        var earthGeo = new THREE.SphereGeometry(100,48,48);
+        //var earthMaterial = new THREE.MeshLambertMaterial();
+        earthMaterial = new THREE.ShaderMaterial( {
+            uniforms: {
+                time: { type: "f", value: 1.0 },
+		resolution: { type: "v2", value: new THREE.Vector2() },
+		sunDirection: { type: "v3", value: lightDir.applyAxisAngle(earthAxis,roty) },
+                dayTexture: { type: "t", value: new THREE.ImageUtils.loadTexture( "textures/bluemarble_map.jpg" ) },
+                nightTexture: { type: "t", value: new THREE.ImageUtils.loadTexture( "textures/Earth_night_8k.jpg" ) },
+		normalTexture: { type: "t", value: new THREE.ImageUtils.loadTexture( "textures/earthbump5k_NRM.png") }
+            },
+            attributes: {
+                vertexOpacity: { type: 'f', value: [] }
+            },
+            vertexShader: document.getElementById( 'vertexShader' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+        } );
+        earth = new THREE.Mesh(earthGeo,earthMaterial);
+        scene.add(earth);
         // Lights
         scene.add( new THREE.AmbientLight( 1 * 0x202020 ) );
         var directionalLight = new THREE.DirectionalLight( 1 * 0xffffff );
@@ -64,10 +77,10 @@ function init() {
         directionalLight.position.y = 0.5;
         directionalLight.position.z = 0.5;
         directionalLight.position.normalize();
-        scene.add( directionalLight );
+        //scene.add( directionalLight );
 
-        pointLight = new THREE.PointLight( 0xffffff, 1 );
-        scene.add( pointLight );
+        pointLight = new THREE.PointLight( 0xffffff, .1 );
+       scene.add( pointLight );
 
         renderer = new THREE.WebGLRenderer({ antialias: true, autoClear: true });
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -107,13 +120,12 @@ function loadImage( path ) {
 function animate() {
     setTimeout(function() {
         requestAnimationFrame( animate );
+	changeRot = 0.00000243*speedupFactor;
         tle_update();
-
-        roty+=0.00000243*speedupFactor;
-
-        sphere.rotation.y=roty;
-        sphereClouds.rotation.y=roty*.5;
-        createSats();
+	//console.log(lightDir.angleTo(new THREE.Vector3(0,-.2,1)))
+	lightDir = lightDir.applyAxisAngle(earthAxis,-changeRot)
+	earthMaterial.uniforms.sunDirection.value = lightDir    
+	createSats();
     }, 1000/30);
     render();
     controls.update();
@@ -125,7 +137,9 @@ function render() {
     pointLight.position.x = 0;
     pointLight.position.y = 0;
     pointLight.position.z = 0;
+    roty+=changeRot;
 
+   earth.rotation.y=roty;
     renderer.render( scene, camera );
 }
 
