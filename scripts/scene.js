@@ -6,6 +6,12 @@ var sphere,earth, skybox;
 var earthMaterial;
 var materialP,particles, particleCount, geoP, geoC, particlesP, particlesC;
 
+var particleTrail = [];
+var particleHeadArr = [];
+var collisionArr = [];
+
+var particleHead;
+
 var lightDir= new THREE.Vector3(0.0,-.2,1.0);
 var earthAxis = new THREE.Vector3(0,1,0);
 
@@ -31,7 +37,8 @@ function init() {
 
         controls = new THREE.OrbitControls( camera );
                                 controls.damping = 0.2;
-                                controls.addEventListener( 'change', render );
+                                controls.addEventListener( 'change',render);
+			
 
         scene = new THREE.Scene();
 
@@ -132,14 +139,28 @@ function animate() {
      	earthMaterial.uniforms.texOffset.value -= changeRot/10;	
 	createSats();
     }, 1000/30);
+	controls.update();
+
     render();
-    scene.remove(particlesP)
-    controls.update();
+    
+   if(particleHeadArr.length>0){
+   	scene.remove(particleHeadArr[0]);
+	particleHeadArr.shift();	
+   }
+    
+    if(particleTrail.length>(1/Math.pow(speedupFactor,2))*1000){
+    	scene.remove(particleTrail[0]);
+	particleTrail.shift();
+    }
+
+    if(collisionArr.length>20){
+    	scene.remove(collisionArr[0]);
+	collisionArr.shift();
+    }
 }
 
 function render() { 
     var timer = Date.now() * 0.0001;
-    camera.lookAt( scene.position );
     pointLight.position.x = 0;
     pointLight.position.y = 0;
     pointLight.position.z = 0;
@@ -180,7 +201,7 @@ function createSats(){
                 for (var i=0; i<geoP.vertices.length; i++) {
                     for (var j=0; j<geoP.vertices.length; j++) {
                         if (i!=j) {
-                            if (geoP.vertices[i].distanceTo(geoP.vertices[j]) < 3 && satVelocity[i].distanceTo(satVelocity[j])>.25) {
+                            if (geoP.vertices[i].distanceTo(geoP.vertices[j]) < 3 && satVelocity[i].distanceTo(satVelocity[j])>.5) {
                                 var vertex = new THREE.Vector3();
 
                                 vertex.x = geoP.vertices[i].x;
@@ -192,20 +213,35 @@ function createSats(){
                         }
                     }
                 }
-                                
-
-                        materialP = new THREE.PointCloudMaterial( { size: 2, sizeAttenuation: false, transparent: true, alpha: .5 } );
+	                materialP = new THREE.PointCloudMaterial( { size: 3, sizeAttenuation: false, transparent: true, alpha: .5 } );
                         materialP.color.setHSL( 1.0, 0.0, 1 );
+				
+                        materialT = new THREE.PointCloudMaterial( { size: 1, sizeAttenuation: false, transparent: true, alpha: .5 } );
+                       materialT.color.setHSL(.6,1,.6); 	
+
+                        materialC = new THREE.PointCloudMaterial( { color: 0xFFFFFF,size: 30, sizeAttenuation: true, map: THREE.ImageUtils.loadTexture('textures/collision.png'), transparent: true, alphaTest: 0.01 } );
+
+                        particleHead = new THREE.PointCloud( geoP, materialP );
+                        particleHead.sortParticles = true;
 			
-                        //console.log(geoP.vertices.length);
+			trailSection = new THREE.PointCloud(geoP,materialT);
+			trailSection.sortParticles = true;		
+			particleTrail.push(trailSection);
+			for(p in particleTrail){
+				scene.add(particleTrail[p])
+			}
+			
+			particleHeadArr.push(particleHead)
+			for(p in particleHeadArr){
+				scene.add(particleHeadArr[p])
+			}
 
-                        materialC = new THREE.PointCloudMaterial( { color: 0xFFFFFF,size: 10, sizeAttenuation: true, map: THREE.ImageUtils.loadTexture('textures/collision.png'), transparent: true, alphaTest: 0.01 } );
-
-                        particlesP = new THREE.PointCloud( geoP, materialP );
-                        particlesP.sortParticles = true;
-                        scene.add( particlesP );
 
                         particlesC = new THREE.PointCloud( geoC, materialC );
-                        scene.add( particlesC );
+                        collisionArr.push(particlesC)
+			for(c in collisionArr){
+				scene.add(collisionArr[c])
+			}
                                                            
 }
+

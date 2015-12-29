@@ -16,7 +16,6 @@
 //    Pan - right mouse, or arrow keys / touch: three finter swipe
 
 THREE.OrbitControls = function ( object, domElement ) {
-
 	this.object = object;
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
 
@@ -382,10 +381,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	function onMouseDown( event ) {
-
 		if ( scope.enabled === false ) return;
 		event.preventDefault();
-
 		if ( event.button === scope.mouseButtons.ORBIT ) {
 			if ( scope.noRotate === true ) return;
 
